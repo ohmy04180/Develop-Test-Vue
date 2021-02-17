@@ -2,15 +2,21 @@
   <div>
     <table class="table">
       <caption class="table__caption">
-        {{tableTitle}}
+        {{
+          tableTitle
+        }}
       </caption>
       <colgroup>
-      <col width="60"/>
-      <col width="60"/>
+        <col width="60" />
+        <col width="60" />
       </colgroup>
       <thead>
         <tr>
-          <th class="table__title" v-for="titleArray in titleArrays" v-bind:key="titleArray.index">
+          <th
+            class="table__title"
+            v-for="titleArray in titleArrays"
+            v-bind:key="titleArray.index"
+          >
             {{ titleArray.title }}
           </th>
         </tr>
@@ -35,6 +41,7 @@
       </button>
       <button
         type="button"
+        v-bind:disabled="pageNumber === endDataList"
         class="pagination__button"
         v-on:click="moveNextPage"
       >
@@ -49,7 +56,7 @@ export default {
   name: "pagination-list",
   data() {
     return {
-      tableTitle: "JSON Data 불러오기",
+      tableTitle: "(Vue.js) JSON Data 불러오기",
       prevText: "이전으로",
       nextText: "다음으로",
       pageNumber: 0,
@@ -68,7 +75,7 @@ export default {
       required: true,
     },
 
-    // 사용자 정의 기본값 
+    // 사용자 정의 기본값
     pageDefault: {
       type: Number,
       required: false,
@@ -98,6 +105,10 @@ export default {
       console.log(endPage);
 
       return this.listArray.slice(startPage, endPage);
+    },
+
+    endDataList() {
+      return Math.floor(this.listArray.length / 10 - 1);
     },
   },
 };
