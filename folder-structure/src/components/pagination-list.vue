@@ -2,64 +2,103 @@
   <div>
     <table class="table">
       <caption class="table__caption">
-        {{
-          tableTitle
-        }}
+        {{tableTitle}}
       </caption>
+      <colgroup>
+      <col width="60"/>
+      <col width="60"/>
+      </colgroup>
       <thead>
         <tr>
-          <th class="table__title">UserId</th>
-          <th class="table__title">Id</th>
-          <th class="table__title">Text</th>
-          <th class="table__title">Body</th>
+          <th class="table__title" v-for="titleArray in titleArrays" v-bind:key="titleArray.index">
+            {{ titleArray.title }}
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in listArray" v-bind:key="item.id">
-          <td>{{ item.userId }}</td>
-          <td>{{ item.id }}</td>
-          <td>{{ item.title }}</td>
-          <td>{{ item.body }}</td>
+        <tr v-for="pageData in pageDatas" v-bind:key="pageData.id">
+          <td>{{ pageData.userId }}</td>
+          <td>{{ pageData.id }}</td>
+          <td>{{ pageData.title }}</td>
+          <td>{{ pageData.body }}</td>
         </tr>
       </tbody>
     </table>
     <div class="pagination">
-      <button type="button" class="pagination__button">
+      <button
+        type="button"
+        v-bind:disabled="pageNumber === 0"
+        class="pagination__button"
+        v-on:click="movePrevPage"
+      >
         {{ prevText }}
       </button>
-      <button type="button" class="pagination__button">
+      <button
+        type="button"
+        class="pagination__button"
+        v-on:click="moveNextPage"
+      >
         {{ nextText }}
       </button>
     </div>
-    <button v-on:click="test">데이터 가져오기</button>
   </div>
 </template>
 
 <script>
- export default {
+export default {
   name: "pagination-list",
   data() {
     return {
       tableTitle: "JSON Data 불러오기",
-      prevText:"이전으로",
-      nextText:"다음으로",
-      dataArrays: []
+      prevText: "이전으로",
+      nextText: "다음으로",
+      pageNumber: 0,
+      titleArrays: [
+        { title: "userId" },
+        { title: "Id" },
+        { title: "title" },
+        { title: "body" },
+      ],
     };
   },
   props: {
+    // 부모에게 가져온 JSON Data 리스트 배열
     listArray: {
       type: Array,
-      required: true
+      required: true,
     },
 
+    // 사용자 정의 기본값 
+    pageDefault: {
+      type: Number,
+      required: false,
+      default: 10,
+    },
   },
   methods: {
-    doSomething() {
-      alert("click");
+    // 버튼 클릭 시 pageNumber 숫자가 1 씩 줄어든다.
+    movePrevPage() {
+      this.pageNumber -= 1;
+      console.log(this.pageNumber);
     },
-    test(){
-      console.log(this.listArray);
-    }
+    // 버튼 클릭 시 pageNumber 숫자가 1 씩 커진다.
+    moveNextPage() {
+      this.pageNumber += 1;
+      console.log(this.pageNumber);
+    },
+  },
+  // 필요에 따라 호출되도록 함수가 실행되도록 computed 사용
+  computed: {
+    pageDatas() {
+      // 버튼을 클릭할 때마다 listArray가 보여지는 넘버가 달라지도록 실행
+      let startPage = this.pageNumber * this.pageDefault;
+      let endPage = startPage + this.pageDefault;
+
+      console.log(startPage);
+      console.log(endPage);
+
+      return this.listArray.slice(startPage, endPage);
+    },
   },
 };
 </script>
