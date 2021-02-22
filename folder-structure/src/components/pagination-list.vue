@@ -69,13 +69,13 @@ export default {
     };
   },
   props: {
-    // 부모에게 가져온 JSON Data 리스트 배열
+    // 부모에게 가져온 JSON Data 리스트 배열 형태로 담아온다.
     listArray: {
       type: Array,
       required: true,
     },
 
-    // 사용자 정의 기본값
+    // 사용자 정의 기본값 (리스트 보여줄 갯수를 정의함)
     pageDefault: {
       type: Number,
       required: false,
@@ -98,15 +98,15 @@ export default {
   computed: {
     pageDatas() {
       // 버튼을 클릭할 때마다 listArray가 보여지는 넘버가 달라지도록 실행
+      // 초깃값 - startPage = 0, endPage = 10
       let startPage = this.pageNumber * this.pageDefault;
       let endPage = startPage + this.pageDefault;
 
-      console.log(startPage);
-      console.log(endPage);
-
+      // listArray를 pageNubmer에 따라 잘라서 보여준다.
       return this.listArray.slice(startPage, endPage);
     },
 
+    // 반올림 해서, (listArray의 총 길이 / 10) - 1 까지 보여주도록 한다.
     endDataList() {
       return Math.floor(this.listArray.length / 10 - 1);
     },
